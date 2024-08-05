@@ -2,7 +2,7 @@ document.getElementById('contentFrame').addEventListener('load', function() {
     var iframeWindow = this.contentWindow;
     var iframeDoc = iframeWindow.document;
 
-    // Blokiraj sve poznate elemente oglasa
+    // Blokiraj sve poznate elemente oglasa (kao u prethodnom kodu)
     var adSelectors = ['.ad', '.ads', '.advertisement', '.banner', '.pop-up', '.sponsored', '.video-ad', '[id^="ad"]', '[class*="ad"]', '[class*="sponsor"]', '[class*="banner"]'];
     adSelectors.forEach(function(selector) {
         var adElements = iframeDoc.querySelectorAll(selector);
@@ -11,44 +11,36 @@ document.getElementById('contentFrame').addEventListener('load', function() {
         });
     });
 
-    // Spreči sve pop-up prozore i nove tabove
+    // Spreči otvaranje novih prozora i pop-up prozora
     iframeWindow.open = function() {
         return null;
     };
-
-    // Onemogući otvaranje novih prozora preko window.open
-    iframeWindow.open = function() {
-        return null;
-    };
-
-    // Spreči sve dodatne pop-up metode
     iframeWindow.alert = iframeWindow.confirm = iframeWindow.prompt = function() {
         return false;
     };
 
-    // Onemogući target="_blank" linkove
+    // Spreči otvaranje novih prozora i tabova
     var links = iframeDoc.getElementsByTagName('a');
     for (var i = 0; i < links.length; i++) {
-        links[i].addEventListener('click', function(event) {
-            event.preventDefault(); // Spreči podrazumevano ponašanje
-            this.setAttribute('target', '_self');
-            iframeWindow.location.href = this.href; // Otvori u istom iframe-u
-        });
+        links[i].setAttribute('target', '_self');
     }
 
-    // Onemogući window.open, postMessage, i sve metode koje mogu otvoriti novi prozor
-    iframeWindow.open = iframeWindow.postMessage = function() {
-        return null;
-    };
+    // Simuliraj klik na sredini stranice 2 sekunde nakon učitavanja
+    setTimeout(function() {
+        var bodyRect = iframeDoc.body.getBoundingClientRect();
+        var middleX = bodyRect.width / 2;
+        var middleY = bodyRect.height / 2;
 
-    // Dodatne sigurnosne mere
-    var originalAddEventListener = iframeWindow.addEventListener;
-    iframeWindow.addEventListener = function(type, listener) {
-        if (type === 'unload') {
-            return; // Spreči dodavanje unload događaja
-        }
-        originalAddEventListener.call(this, type, listener);
-    };
+        var event = new MouseEvent('click', {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+            clientX: middleX,
+            clientY: middleY
+        });
+
+        iframeDoc.dispatchEvent(event);
+    }, 2000); // 2 sekunde nakon učitavanja stranice
 
     // Ukloni sve skripte koje mogu učitati oglase
     var scripts = iframeDoc.getElementsByTagName('script');
@@ -57,7 +49,4 @@ document.getElementById('contentFrame').addEventListener('load', function() {
             scripts[i].remove();
         }
     }
-
-    // Dodatne metode za sprečavanje reklama
-    iframeDoc.head.innerHTML += '<style>.ad, .ads, .advertisement, .banner, .pop-up, .sponsored, .video-ad, [id^="ad"], [class*="ad"], [class*="sponsor"], [class*="banner"] { display: none !important; }</style>';
 });
