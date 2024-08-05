@@ -2,7 +2,7 @@ document.getElementById('contentFrame').addEventListener('load', function() {
     var iframeWindow = this.contentWindow;
     var iframeDoc = iframeWindow.document;
 
-    // Blokiraj sve poznate elemente oglasa (kao u prethodnom kodu)
+    // Blokiraj sve poznate elemente oglasa
     var adSelectors = ['.ad', '.ads', '.advertisement', '.banner', '.pop-up', '.sponsored', '.video-ad', '[id^="ad"]', '[class*="ad"]', '[class*="sponsor"]', '[class*="banner"]'];
     adSelectors.forEach(function(selector) {
         var adElements = iframeDoc.querySelectorAll(selector);
@@ -40,7 +40,7 @@ document.getElementById('contentFrame').addEventListener('load', function() {
         });
 
         iframeDoc.dispatchEvent(event);
-    }, 2000); // 2 sekunde nakon učitavanja stranice
+    }, 2000);
 
     // Ukloni sve skripte koje mogu učitati oglase
     var scripts = iframeDoc.getElementsByTagName('script');
@@ -50,12 +50,13 @@ document.getElementById('contentFrame').addEventListener('load', function() {
         }
     }
 
-    // Pokretanje YouTube videa pritiskom na dugme "Enter"
+    // Fokusiranje i pokretanje YouTube videa pritiskom na dugme "Enter"
     document.addEventListener('keydown', function(event) {
         if (event.key === "Enter") {
-            var largePlayButton = iframeDoc.querySelector(".ytp-large-play-button");
-            if (largePlayButton) {
-                largePlayButton.click();
+            var playButton = iframeDoc.querySelector(".ytp-large-play-button");
+            if (playButton) {
+                playButton.focus(); // Fokusiraj dugme
+                playButton.click(); // Klikni na dugme
             } else {
                 console.warn('Large play button not found.');
             }
