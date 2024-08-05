@@ -35,6 +35,12 @@ function showKeyboard() {
     document.getElementById('virtual-keyboard').focus();
 }
 
+// Funkcija za sakrivanje virtuelne tastature
+function hideKeyboard() {
+    const keyboard = document.getElementById('virtual-keyboard');
+    keyboard.style.display = 'none';
+}
+
 // Funkcija za unos teksta sa virtuelne tastature
 function addCharacter(char) {
     const input = document.getElementById('search-input');
@@ -55,11 +61,20 @@ function removeCharacter() {
 function submitSearch() {
     searchMovies();
     // Sakrij tastaturu nakon unosa
-    document.getElementById('virtual-keyboard').style.display = 'none';
+    hideKeyboard();
 }
 
 // Povezivanje prikazivanja tastature na fokus input polja
 document.getElementById('search-input').addEventListener('focus', showKeyboard);
+
+// Povezivanje sakrivanja tastature kada se izgubi fokus
+document.addEventListener('click', function(event) {
+    const keyboard = document.getElementById('virtual-keyboard');
+    const input = document.getElementById('search-input');
+    if (event.target !== input && event.target.closest('#virtual-keyboard') === null) {
+        hideKeyboard();
+    }
+});
 
 // Povezivanje dugmadi virtuelne tastature sa funkcijom addCharacter
 document.querySelectorAll('.keyboard-key').forEach(key => {
