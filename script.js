@@ -88,7 +88,7 @@ document.getElementById('delete-key').addEventListener('click', function() {
     removeCharacter();
 });
 
-// Povezivanje dugmeta za potvrdu
+// Povezivanje dugmeta za potvrdu ssait
 document.getElementById('enter-key').addEventListener('click', function() {
     submitSearch();
 });
