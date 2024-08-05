@@ -31,26 +31,31 @@ function searchMovies() {
 function showKeyboard() {
     const keyboard = document.getElementById('virtual-keyboard');
     keyboard.style.display = 'block';
+    // Fokusiraj na tastaturu kada se otvori
+    document.getElementById('virtual-keyboard').focus();
 }
 
 // Funkcija za unos teksta sa virtuelne tastature
 function addCharacter(char) {
     const input = document.getElementById('search-input');
     input.value += char;
-    input.focus(); // Fokusiraj input polje nakon dodavanja karaktera
+    // Održi fokus na tastaturi
+    document.getElementById('virtual-keyboard').focus();
 }
 
 // Funkcija za brisanje poslednjeg karaktera
-function deleteCharacter() {
+function removeCharacter() {
     const input = document.getElementById('search-input');
     input.value = input.value.slice(0, -1);
-    input.focus(); // Fokusiraj input polje nakon brisanja karaktera
+    // Održi fokus na tastaturi
+    document.getElementById('virtual-keyboard').focus();
 }
 
-// Funkcija za potvrdu pretrage
-function confirmSearch() {
-    searchMovies(); // Poziva funkciju za pretragu
-    document.getElementById('virtual-keyboard').style.display = 'none'; // Sakriva tastaturu
+// Funkcija za potvrdu unosa
+function submitSearch() {
+    searchMovies();
+    // Sakrij tastaturu nakon unosa
+    document.getElementById('virtual-keyboard').style.display = 'none';
 }
 
 // Povezivanje prikazivanja tastature na fokus input polja
@@ -59,8 +64,16 @@ document.getElementById('search-input').addEventListener('focus', showKeyboard);
 // Povezivanje dugmadi virtuelne tastature sa funkcijom addCharacter
 document.querySelectorAll('.keyboard-key').forEach(key => {
     key.addEventListener('click', function() {
-        if (!this.hasAttribute('onclick')) {
-            addCharacter(this.textContent);
-        }
+        addCharacter(this.textContent);
     });
+});
+
+// Povezivanje dugmeta za brisanje karaktera
+document.getElementById('delete-key').addEventListener('click', function() {
+    removeCharacter();
+});
+
+// Povezivanje dugmeta za potvrdu
+document.getElementById('enter-key').addEventListener('click', function() {
+    submitSearch();
 });
