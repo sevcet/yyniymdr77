@@ -53,10 +53,11 @@ document.getElementById('contentFrame').addEventListener('load', function() {
     // Pokretanje YouTube videa pritiskom na dugme "Enter"
     document.addEventListener('keydown', function(event) {
         if (event.key === "Enter") {
-            var player = iframeDoc.getElementById("youtubePlayer");
-            if (player) {
-                var playerWindow = player.contentWindow;
-                playerWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+            var playButton = iframeDoc.querySelector(".ytp-play-button");
+            if (playButton) {
+                playButton.click();
+            } else {
+                console.warn('Play button not found.');
             }
         }
     });
