@@ -49,4 +49,15 @@ document.getElementById('contentFrame').addEventListener('load', function() {
             scripts[i].remove();
         }
     }
+
+    // Pokretanje YouTube videa pritiskom na dugme "Enter"
+    document.addEventListener('keydown', function(event) {
+        if (event.key === "Enter") {
+            var player = iframeDoc.getElementById("youtubePlayer");
+            if (player) {
+                var playerWindow = player.contentWindow;
+                playerWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+            }
+        }
+    });
 });
